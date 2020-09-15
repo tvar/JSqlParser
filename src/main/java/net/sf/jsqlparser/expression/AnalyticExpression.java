@@ -199,6 +199,8 @@ public class AnalyticExpression extends ASTNodeAccessImpl implements Expression 
         }
 
         switch (type) {
+            case FILTER_ONLY:
+                return b.toString();
             case WITHIN_GROUP:
                 b.append("WITHIN GROUP");
                 break;

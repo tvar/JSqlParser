@@ -710,6 +710,8 @@ public class ExpressionDeParser extends AbstractDeParser<Expression>
         }
 
         switch (aexpr.getType()) {
+            case FILTER_ONLY:
+                return;
             case WITHIN_GROUP:
                 buffer.append("WITHIN GROUP");
                 break;
