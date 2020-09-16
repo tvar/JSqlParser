@@ -195,7 +195,10 @@ public class AnalyticExpression extends ASTNodeAccessImpl implements Expression 
         if (filterExpression != null) {
             b.append("FILTER (WHERE ");
             b.append(filterExpression.toString());
-            b.append(") ");
+            b.append(")");
+            if (type != AnalyticType.FILTER_ONLY) {
+                b.append(" ");
+            }
         }
 
         switch (type) {
