@@ -729,6 +729,11 @@ public class TablesNamesFinder implements SelectVisitor, FromItemVisitor, Expres
     public void visit(SetStatement set) {
         throw new UnsupportedOperationException(NOT_SUPPORTED_YET);
     }
+    
+    @Override
+    public void visit(ResetStatement set) {
+        throw new UnsupportedOperationException(NOT_SUPPORTED_YET);
+    }
 
     @Override
     public void visit(ShowColumnsStatement set) {

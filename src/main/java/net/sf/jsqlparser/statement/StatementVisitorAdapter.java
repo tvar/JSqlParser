@@ -119,6 +119,11 @@ public class StatementVisitorAdapter implements StatementVisitor {
     public void visit(SetStatement set) {
 
     }
+    
+    @Override
+    public void visit(ResetStatement set) {
+
+    }
 
     @Override
     public void visit(Merge merge) {

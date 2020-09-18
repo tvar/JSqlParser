@@ -12,19 +12,7 @@ package net.sf.jsqlparser.util.deparser;
 import java.util.Iterator;
 import java.util.stream.Collectors;
 
-import net.sf.jsqlparser.statement.Block;
-import net.sf.jsqlparser.statement.Commit;
-import net.sf.jsqlparser.statement.CreateFunctionalStatement;
-import net.sf.jsqlparser.statement.DeclareStatement;
-import net.sf.jsqlparser.statement.DescribeStatement;
-import net.sf.jsqlparser.statement.ExplainStatement;
-import net.sf.jsqlparser.statement.SetStatement;
-import net.sf.jsqlparser.statement.ShowColumnsStatement;
-import net.sf.jsqlparser.statement.ShowStatement;
-import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.StatementVisitor;
-import net.sf.jsqlparser.statement.Statements;
-import net.sf.jsqlparser.statement.UseStatement;
+import net.sf.jsqlparser.statement.*;
 import net.sf.jsqlparser.statement.alter.Alter;
 import net.sf.jsqlparser.statement.alter.sequence.AlterSequence;
 import net.sf.jsqlparser.statement.comment.Comment;
@@ -51,9 +39,9 @@ import net.sf.jsqlparser.statement.values.ValuesStatement;
 
 public class StatementDeParser extends AbstractDeParser<Statement> implements StatementVisitor {
 
-    private ExpressionDeParser expressionDeParser;
+    private final ExpressionDeParser expressionDeParser;
 
-    private SelectDeParser selectDeParser;
+    private final SelectDeParser selectDeParser;
 
     public StatementDeParser(StringBuilder buffer) {
         this(new ExpressionDeParser(), new SelectDeParser(), buffer);
@@ -193,6 +181,16 @@ public class StatementDeParser extends AbstractDeParser<Statement> implements St
         expressionDeParser.setSelectVisitor(selectDeParser);
         expressionDeParser.setBuffer(buffer);
         SetStatementDeParser setStatementDeparser = new SetStatementDeParser(expressionDeParser, buffer);
+        selectDeParser.setExpressionVisitor(expressionDeParser);
+        setStatementDeparser.deParse(set);
+    }
+    
+    @Override
+    public void visit(ResetStatement set) {
+        selectDeParser.setBuffer(buffer);
+        expressionDeParser.setSelectVisitor(selectDeParser);
+        expressionDeParser.setBuffer(buffer);
+        ResetStatementDeParser setStatementDeparser = new ResetStatementDeParser(expressionDeParser, buffer);
         selectDeParser.setExpressionVisitor(expressionDeParser);
         setStatementDeparser.deParse(set);
     }

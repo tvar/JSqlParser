@@ -306,6 +306,7 @@ TOKEN: /* SQL Keywords. prefixed with K_ to avoid name clashes */
 |   <K_SEPARATOR:"SEPARATOR">
 |   <K_SESSION:"SESSION">
 |   <K_SET:"SET">
+|   <K_RESET:"RESET">
 |   <K_SETS:"SETS">
 |   <K_SHOW : "SHOW">
 |   <K_SIBLINGS:"SIBLINGS">
@@ -500,6 +501,8 @@ Statement SingleStatement() :
         |
         stm = Set()
         |
+        stm = Reset()
+        |
         LOOKAHEAD(ShowColumns())
         stm = ShowColumns()
         |
@@ -653,6 +656,16 @@ SetStatement Set(): {
         { set.add(name, value, useEqual); } )*
 
     { return set; }
+}
+
+ResetStatement Reset(): {
+    String name;
+    ResetStatement reset;
+}
+{
+    <K_RESET> name = RelObjectNameExt()
+    { reset = new ResetStatement(name); }
+    { return reset; }
 }
 
 DescribeStatement Describe(): {
