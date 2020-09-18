@@ -3476,7 +3476,7 @@ AnalyticExpression AnalyticExpression(Function function) :
     Expression filter = null;
 }
 {
-    ((<K_FILTER> "(" <K_WHERE> {retval.setType(AnalyticType.FILTER_ONLY);} filter = Expression() ")" [ windowFun(retval) ] )
+    ((<K_FILTER> "(" <K_WHERE> {retval.setType(AnalyticType.FILTER_ONLY);} filter = Expression() ")" [ LOOKAHEAD(2) windowFun(retval) ] )
         | windowFun(retval))
     {
         retval.setFilterExpression(filter);
