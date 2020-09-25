@@ -382,6 +382,11 @@ TOKEN : /* Date/Time with time zones */
     <DT_ZONE: <K_DATETIMELITERAL> (<WHITESPACE>)* ("(" <S_LONG> ")")? (<WHITESPACE>)* (<K_WITH> | <K_WITHOUT>) (<WHITESPACE>)+ "TIME" (<WHITESPACE>)+ <K_ZONE>>
 }
 
+TOKEN :
+{
+    <TIME_ZONE: "TIME" (<WHITESPACE>)+ <K_ZONE>>
+}
+
 TOKEN : /* Numeric Constants */
 {
    < S_DOUBLE: ((<S_LONG>)? "." <S_LONG> ( ["e","E"] (["+", "-"])? <S_LONG>)?
@@ -555,7 +560,7 @@ Block Block() #Block : {
             error_skipto(ST_SEMICOLON);
         } else {
             throw e;
-        }           
+        }
     }
     {
         stmts.setStatements(list);
@@ -624,7 +629,7 @@ DeclareStatement Declare(): {
                 {
                     stmt.withUserVariable(userVariable)
                       .withDeclareType(DeclareType.AS)
-                      .withTypeName(typeName); 
+                      .withTypeName(typeName);
                 }
         |
             (colDataType = ColDataType() ["=" defaultExpr = Expression()]
@@ -648,9 +653,14 @@ SetStatement Set(): {
     Expression value;
     boolean useEqual = false;
     SetStatement set;
+    Token tz;
 }
 {
-    <K_SET> name = RelObjectNameExt() ["=" { useEqual=true; } ] value=SimpleExpression()
+
+    (LOOKAHEAD(3) <K_SET> <TIME_ZONE> { name = "time zone"; useEqual=false; } tz=<S_IDENTIFIER> {value = new StringValue(tz.image);}
+    |
+    LOOKAHEAD(3) <K_SET> name = RelObjectNameExt() ["=" { useEqual=true; } ] value=SimpleExpression()
+    )
     { set = new SetStatement(name,value).withUseEqual(useEqual); }
     ( { useEqual=false; } "," name = RelObjectNameExt() ["=" { useEqual=true; } ] value=SimpleExpression()
         { set.add(name, value, useEqual); } )*
@@ -661,9 +671,10 @@ SetStatement Set(): {
 ResetStatement Reset(): {
     String name;
     ResetStatement reset;
+    Token all;
 }
 {
-    <K_RESET> name = RelObjectNameExt()
+    <K_RESET> ( name = RelObjectNameExt() | all = <K_ALL> {name = all.image; })
     { reset = new ResetStatement(name); }
     { return reset; }
 }
@@ -979,7 +990,7 @@ Replace Replace():
    {
         if (!columns.isEmpty()) {
            replace.withColumns(columns);
-        } 
+        }
         return replace.withTable(table);
    }
 }
@@ -1101,7 +1112,7 @@ Insert Insert():
     ]
 
     {
-        if (!columns.isEmpty()) { 
+        if (!columns.isEmpty()) {
             insert.setColumns(columns);
         }
         return insert.withItemsList(itemsList)
@@ -3061,8 +3072,8 @@ Expression SimpleExpression():
     Token operation = null;
 }
 {
-    [ LOOKAHEAD(UserVariable() ("=" | ":=") ) 
-        user = UserVariable() 
+    [ LOOKAHEAD(UserVariable() ("=" | ":=") )
+        user = UserVariable()
        ( operation = "=" | operation = ":=" )
     ]
     retval=ConcatExpression()
@@ -3073,7 +3084,7 @@ Expression SimpleExpression():
             assignment.setOperation(operation.image);
             assignment.setExpression(retval);
             return assignment;
-        } else 
+        } else
             return retval;
     }
 }
@@ -3637,7 +3648,7 @@ RowConstructor RowConstructor(): {
 }
 
 /**
-TODO: VariableExpression should be a standalone class with more operations available. 
+TODO: VariableExpression should be a standalone class with more operations available.
 */
 EqualsTo VariableExpression(): {
     Expression left;
@@ -3805,9 +3816,9 @@ XMLSerializeExpr XMLSerializeExpr(): {
    ColDataType dataType;
 }
 {
-    <K_XMLSERIALIZE> 
-        "(" <K_XMLAGG> 
-                "(" <K_XMLTEXT> 
+    <K_XMLSERIALIZE>
+        "(" <K_XMLAGG>
+                "(" <K_XMLTEXT>
                         "(" expression=SimpleExpression() ")"
                 [ orderByElements=OrderByElements() ]
         ")"
@@ -4670,7 +4681,7 @@ AlterExpression AlterExpression():
             ( <K_FOREIGN> <K_KEY> columnNames=ColumnsNamesList() { alterExp.setFkColumns(columnNames); columnNames = null; }
                  <K_REFERENCES> tk=<S_IDENTIFIER> [ columnNames=ColumnsNamesList() ]
                         { alterExp.setFkSourceTable(tk.image); alterExp.setFkSourceColumns(columnNames); }
-                                
+
                 [LOOKAHEAD(2) (<K_ON> (tk=<K_DELETE> | tk=<K_UPDATE>) action = Action()
                         		  { alterExp.setReferentialAction(ReferentialAction.Type.valueOf(tk.image), action); }
                                   )]
@@ -4696,7 +4707,7 @@ AlterExpression AlterExpression():
                         fkIndex.withTable(fkTable).withReferencedColumnNames(columnNames);
                         alterExp.setIndex(fkIndex);
                     }
-                                
+
                 [LOOKAHEAD(2) (<K_ON> (tk=<K_DELETE> | tk=<K_UPDATE>) action = Action()
                         		  { fkIndex.setReferentialAction(ReferentialAction.Type.valueOf(tk.image), action); }
                                   )]
@@ -4755,9 +4766,9 @@ AlterExpression AlterExpression():
                              )
             )
             |
-            ( sk3=RelObjectName() <K_COMMENT> 
-                tk=<S_CHAR_LITERAL> { 
-                    alterExp.withColumnName(sk3).withCommentText(tk.image); 
+            ( sk3=RelObjectName() <K_COMMENT>
+                tk=<S_CHAR_LITERAL> {
+                    alterExp.withColumnName(sk3).withCommentText(tk.image);
                 }
             )
           )
