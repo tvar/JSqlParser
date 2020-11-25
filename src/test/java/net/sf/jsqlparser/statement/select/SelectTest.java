@@ -4291,4 +4291,54 @@ public class SelectTest {
         assertSqlCanBeParsedAndDeparsed("SELECT 1 < 2 AS a, 0 IS NULL AS b");
 //        assertSqlCanBeParsedAndDeparsed("SELECT 1 < 2 AS a, (0 IS NULL) AS b");
     }
+    
+    @Test
+    public void testKeyWordExceptIssue1040() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("SELECT FORMAT(100000, 2)");
+    }
+    
+    @Test
+    public void testKeyWordExceptIssue1044() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("SELECT SP_ID FROM ST_PR WHERE INSTR(',' || SP_OFF || ',', ',' || ? || ',') > 0");
+    }
+    
+    @Test
+    public void testKeyWordExceptIssue1055() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("SELECT INTERVAL ? DAY");
+    }
+    
+    @Test
+    public void testKeyWordExceptIssue1055_2() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("SELECT * FROM mytable WHERE A.end_time > now() AND A.end_time <= date_add(now(), INTERVAL ? DAY)");
+    }
+    
+    @Test
+    public void testIssue1062() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("SELECT * FROM mytable WHERE temperature.timestamp <= @to AND temperature.timestamp >= @from");
+    }
+    
+    @Test
+    public void testIssue1062_2() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("SELECT * FROM mytable WHERE temperature.timestamp <= @until AND temperature.timestamp >= @from");
+    }
+
+    @Test
+    public void testIssue1068() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("SELECT t2.c AS div");
+    }
+  
+    @Test
+    public void selectWithSingleIn() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("SELECT 1 FROM dual WHERE a IN 1");
+    }
+    
+    @Test
+    public void testKeywordSequenceIssue1075() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("SELECT a.sequence FROM all_procedures a");
+    }
+    
+    @Test
+    public void testKeywordSequenceIssue1074() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("SELECT * FROM t_user WITH (NOLOCK)");
+    }
 }
