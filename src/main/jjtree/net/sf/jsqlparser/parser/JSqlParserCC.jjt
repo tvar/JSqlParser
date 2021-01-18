@@ -4188,7 +4188,7 @@ CreateTable CreateTable():
     <K_TABLE>
     [ LOOKAHEAD(2) <K_IF> <K_NOT> <K_EXISTS> { createTable.setIfNotExists(true); }]
     table=Table()
-    [
+    [ LOOKAHEAD(2)
         ("("
         coldef = ColumnDefinition()
 
@@ -4312,9 +4312,10 @@ CreateTable CreateTable():
         )*
 
         ")"
-        (     parameter=CreateParameter() { tableOptions.addAll(parameter); } )*
         )
     ]
+    ( parameter=CreateParameter() { tableOptions.addAll(parameter); } )*
+
     // see https://docs.oracle.com/cd/B19306_01/server.102/b14200/statements_7002.htm#i2126725
     // table properties , all these are optional
     [ rowMovement = RowMovement() { createTable.setRowMovement(rowMovement); }]
@@ -4482,6 +4483,8 @@ List<String> CreateParameter():
             |
             tk=<K_COMMIT> { param.add(tk.image); }
             |
+            tk=<K_DROP> { param.add(tk.image); }
+            |
             tk=<K_ROWS> { param.add(tk.image); }
             |
             tk=<K_UNIQUE> { param.add(tk.image); }
@@ -4533,7 +4536,7 @@ List<String> CreateParameter():
             tk=<K_COLLATE> { param.add(tk.image); }
             |
             tk=<K_ASC> { param.add(tk.image); }
-	    |
+            |
             tk=<K_DESC> { param.add(tk.image); }
             |
             tk=<K_TRUE> { param.add(tk.image); }
