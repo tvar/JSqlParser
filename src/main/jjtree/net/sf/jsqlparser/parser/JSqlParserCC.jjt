@@ -699,7 +699,7 @@ ResetStatement Reset(): {
     Token all;
 }
 {
-    <K_RESET> ( name = RelObjectNameExt() | all = <K_ALL> {name = all.image; })
+    <K_RESET> ( name = RelObjectNameExt() | all = <K_ALL> {name = all.image; } | <TIME_ZONE> {name = "Time Zone"; } )
     { reset = new ResetStatement(name); }
     { return reset; }
 }
