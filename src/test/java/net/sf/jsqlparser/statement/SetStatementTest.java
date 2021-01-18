@@ -38,6 +38,10 @@ public class SetStatementTest {
     public void testMultiValue() throws JSQLParserException {
         assertSqlCanBeParsedAndDeparsed("SET v = 1, c = 3");
     }
+    @Test
+    public void testListValue() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("SET v = 1, 3");
+    }
     
     @Test
     public void testValueOnIssue927() throws JSQLParserException {

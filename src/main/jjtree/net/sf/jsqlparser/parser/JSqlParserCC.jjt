@@ -663,21 +663,33 @@ DeclareStatement Declare(): {
 
 SetStatement Set(): {
     String name;
-    Expression value;
+    ArrayList<Expression> expList;
     boolean useEqual = false;
     SetStatement set;
-    Token tz;
+    Expression exp = null;
 }
 {
 
-    (LOOKAHEAD(3) <K_SET> <TIME_ZONE> { name = "time zone"; useEqual=false; } tz=<S_IDENTIFIER> {value = new StringValue(tz.image);}
+    (LOOKAHEAD(3) <K_SET> <TIME_ZONE> { name = "Time Zone"; useEqual=false; }
+        exp=SimpleExpression()
+        {expList = new ArrayList<Expression>(); expList.add(exp); }
     |
-    LOOKAHEAD(3) <K_SET> name = RelObjectNameExt() ["=" { useEqual=true; } ] value=SimpleExpression()
+    LOOKAHEAD(3) <K_SET> name = RelObjectNameExt() ["=" { useEqual=true; } ]
+        exp=SimpleExpression()
+        {expList = new ArrayList<Expression>(); expList.add(exp); }
     )
-    { set = new SetStatement(name,value).withUseEqual(useEqual); }
-    ( { useEqual=false; } "," name = RelObjectNameExt() ["=" { useEqual=true; } ] value=SimpleExpression()
-        { set.add(name, value, useEqual); } )*
-
+    { set = new SetStatement(name,expList).withUseEqual(useEqual); }
+    (
+        { useEqual=false; }
+        ","
+        (LOOKAHEAD(2)
+            (name = RelObjectNameExt() ["=" { useEqual=true; } ]
+              exp=SimpleExpression()
+              {expList = new ArrayList<Expression>();
+                expList.add(exp);
+                set.add(name, expList, useEqual);})
+            | exp=SimpleExpression() { expList.add(exp); }
+         ))*
     { return set; }
 }
 
