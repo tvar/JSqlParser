@@ -4566,12 +4566,14 @@ String AList():
 {
     StringBuilder retval = new StringBuilder("(");
     Token tk = null;
-    Token tk2 = null;
+    String name = null;
 }
 {
      "("
 
-     ( (tk=<S_LONG> | tk=<S_DOUBLE> | tk=<S_CHAR_LITERAL> | tk=<S_IDENTIFIER> | tk=<S_QUOTED_IDENTIFIER>) { retval.append(tk.image); }
+     (
+       ( (tk=<S_LONG> | tk=<S_DOUBLE> | tk=<S_CHAR_LITERAL>) { retval.append(tk.image); }
+         | (name=RelObjectNameWithoutValue()) { retval.append(name); })
        [("," {retval.append(",");} | "=" {retval.append("=");})] )*
 
     ")"

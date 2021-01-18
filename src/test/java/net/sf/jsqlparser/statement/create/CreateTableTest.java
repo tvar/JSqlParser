@@ -143,7 +143,7 @@ public class CreateTableTest {
 
     @Test
     public void testCreateTableParams2() throws JSQLParserException {
-        assertSqlCanBeParsedAndDeparsed("CREATE TEMPORARY TABLE t1 ON COMMIT DROP AS SELECT * FROM t2");
+        assertSqlCanBeParsedAndDeparsed("CREATE TEMPORARY TABLE t1 WITH (APPENDONLY=true,ORIENTATION=column,COMPRESSTYPE=zlib,OIDS=FALSE) ON COMMIT DROP AS SELECT column FROM t2");
     }
 
 
