@@ -27,7 +27,9 @@ public class SetStatementDeParser extends AbstractDeParser<SetStatement> {
     @Override
     public void deParse(SetStatement set) {
         buffer.append("SET ");
-
+        if (set.getEffectParameter() != null) {
+            buffer.append(set.getEffectParameter()).append(" ");
+        }
         for (int i = 0; i < set.getCount(); i++) {
             if (i > 0) {
                 buffer.append(", ");

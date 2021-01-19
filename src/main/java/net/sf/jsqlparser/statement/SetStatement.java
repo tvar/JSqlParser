@@ -16,7 +16,7 @@ import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 
 public final class SetStatement implements Statement {
-
+    private String effectParameter;
     private final List<NameExpr> values = new ArrayList<>();
 
     public SetStatement() {
@@ -106,10 +106,15 @@ public final class SetStatement implements Statement {
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder("SET ");
-
+        if (effectParameter != null) {
+            b.append(effectParameter).append(" ");
+        }
+        boolean addComma = false;
         for (NameExpr ne : values) {
-            if (b.length() != 4) {
+            if (addComma) {
                 b.append(", ");
+            } else {
+                addComma = true;
             }
             b.append(toString(ne));
         }
@@ -137,5 +142,17 @@ public final class SetStatement implements Statement {
             this.expressions = expressions;
             this.useEqual = useEqual;
         }
+    }
+
+    public String getEffectParameter() {
+        return effectParameter;
+    }
+
+    public void setEffectParameter(String effectParameter) {
+        this.effectParameter = effectParameter;
+    }
+    public SetStatement withEffectParameter(String effectParameter) {
+        this.effectParameter = effectParameter;
+        return this;
     }
 }

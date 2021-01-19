@@ -240,6 +240,7 @@ TOKEN: /* SQL Keywords. prefixed with K_ to avoid name clashes */
 |   <K_LEFT:"LEFT">
 |   <K_LIKE:"LIKE">
 |   <K_LIMIT:"LIMIT">
+|   <K_LOCAL:"LOCAL">
 |   <K_LOW_PRIORITY : "LOW_PRIORITY">
 |   <K_MATCH: "MATCH">
 |   <K_MATCHED: "MATCHED">
@@ -668,27 +669,37 @@ SetStatement Set(): {
     boolean useEqual = false;
     SetStatement set;
     Expression exp = null;
+    Token tk = null;
+    String effectParameter = null;
 }
 {
+    <K_SET>
+    (
 
-    (LOOKAHEAD(3) <K_SET> <TIME_ZONE> { name = "Time Zone"; useEqual=false; }
-        exp=SimpleExpression()
-        {expList = new ArrayList<Expression>(); expList.add(exp); }
-    |
-    LOOKAHEAD(3) <K_SET> name = RelObjectNameExt() ["=" { useEqual=true; } ]
-        exp=SimpleExpression()
-        {expList = new ArrayList<Expression>(); expList.add(exp); }
+        [LOOKAHEAD(3) (tk = <K_LOCAL> | tk = <K_SESSION>) {effectParameter = tk.image; } ]
+        (
+          <TIME_ZONE> { name = "Time Zone"; useEqual=false; }
+        | (name = RelObjectNameExt() ["=" { useEqual=true; } ])
+        )
     )
-    { set = new SetStatement(name,expList).withUseEqual(useEqual); }
+    exp=SimpleExpression()
+    {expList = new ArrayList<Expression>(); expList.add(exp); }
+
+    { set = new SetStatement(name,expList).withUseEqual(useEqual).withEffectParameter(effectParameter); }
     (
         { useEqual=false; }
         ","
-        (LOOKAHEAD(2)
-            (name = RelObjectNameExt() ["=" { useEqual=true; } ]
+        (LOOKAHEAD(3)
+            (
+              (
+                  <TIME_ZONE> { name = "Time Zone"; useEqual=false; }
+                | (name = RelObjectNameExt() ["=" { useEqual=true; } ])
+              )
               exp=SimpleExpression()
               {expList = new ArrayList<Expression>();
                 expList.add(exp);
-                set.add(name, expList, useEqual);})
+                set.add(name, expList, useEqual);}
+            )
             | exp=SimpleExpression() { expList.add(exp); }
          ))*
     { return set; }
@@ -1381,7 +1392,7 @@ String RelObjectNameWithoutValue() :
       | tk=<K_READ> | tk=<K_SCHEMA> | tk=<K_SIGNED> | tk=<K_SIZE> | tk=<K_SEQUENCE> | tk=<K_SESSION>
       | tk=<K_VIEW> | tk=<K_NOLOCK> | tk=<K_VALIDATE> | tk=<K_CYCLE> | tk=<K_OF> | tk=<K_EXCLUDE>
     /*| tk=<K_PLACING> | tk=<K_BOTH> | tk=<K_LEADING> | tk=<K_TRAILING> */
-      | tk=<K_FORMAT> | tk=<K_DIV> | tk=<K_UNSIGNED> | tk=<K_CASE> | tk=<K_CACHE> | tk=<K_ARRAYLITERAL>
+      | tk=<K_FORMAT> | tk=<K_DIV> | tk=<K_UNSIGNED> | tk=<K_CASE> | tk=<K_CACHE> | tk=<K_ARRAYLITERAL> | tk=<K_LOCAL>
       )
 
     { return tk.image; }

@@ -42,6 +42,16 @@ public class SetStatementTest {
     public void testListValue() throws JSQLParserException {
         assertSqlCanBeParsedAndDeparsed("SET v = 1, 3");
     }
+
+    @Test
+    public void tesTimeZone() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("SET LOCAL Time Zone 'UTC'");
+    }
+
+    @Test
+    public void tesLocalWithEq() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("SET LOCAL cursor_tuple_fraction = 0.05, Time Zone UTC");
+    }
     
     @Test
     public void testValueOnIssue927() throws JSQLParserException {
