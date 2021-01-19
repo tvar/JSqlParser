@@ -21,6 +21,7 @@ import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.replace.Replace;
 import net.sf.jsqlparser.statement.select.SelectVisitor;
 import net.sf.jsqlparser.statement.select.SubSelect;
+import net.sf.jsqlparser.statement.select.ValuesList;
 
 public class ReplaceDeParser extends AbstractDeParser<Replace> implements ItemsListVisitor {
 
@@ -92,6 +93,14 @@ public class ReplaceDeParser extends AbstractDeParser<Replace> implements ItemsL
             }
         }
         buffer.append(")");
+    }
+
+    @Override
+    public void visit(ValuesList valuesList) {
+        /* Not supported yet
+        buffer.append("(");
+        valuesList.getMultiExpressionList().accept(this);
+        buffer.append(")");*/
     }
 
     @Override

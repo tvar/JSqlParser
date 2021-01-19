@@ -22,6 +22,7 @@ import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.SelectExpressionItem;
 import net.sf.jsqlparser.statement.select.SelectVisitor;
 import net.sf.jsqlparser.statement.select.SubSelect;
+import net.sf.jsqlparser.statement.select.ValuesList;
 import net.sf.jsqlparser.statement.select.WithItem;
 
 public class InsertDeParser extends AbstractDeParser<Insert> implements ItemsListVisitor {
@@ -153,6 +154,14 @@ public class InsertDeParser extends AbstractDeParser<Insert> implements ItemsLis
             }
         }
         buffer.append(")");
+    }
+
+    @Override
+    public void visit(ValuesList valuesList) {
+        /* Not supported yet
+        buffer.append("(");
+        valuesList.getMultiExpressionList().accept(this);
+        buffer.append(")");*/
     }
 
     @Override

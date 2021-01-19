@@ -99,6 +99,7 @@ import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.select.OrderByElement;
 import net.sf.jsqlparser.statement.select.SelectVisitor;
 import net.sf.jsqlparser.statement.select.SubSelect;
+import net.sf.jsqlparser.statement.select.ValuesList;
 import net.sf.jsqlparser.statement.select.WithItem;
 
 public class ExpressionDeParser extends AbstractDeParser<Expression>
@@ -530,6 +531,13 @@ public class ExpressionDeParser extends AbstractDeParser<Expression>
         if (useBracketsInExprList) {
             buffer.append(")");
         }
+    }
+
+    @Override
+    public void visit(ValuesList valuesList) {
+        buffer.append("(VALUES ");
+        valuesList.getMultiExpressionList().accept(this);
+        buffer.append(")");
     }
 
     @Override

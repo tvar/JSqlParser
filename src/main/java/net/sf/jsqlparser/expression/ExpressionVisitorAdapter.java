@@ -27,6 +27,7 @@ import net.sf.jsqlparser.statement.select.SelectItemVisitor;
 import net.sf.jsqlparser.statement.select.SelectVisitor;
 import net.sf.jsqlparser.statement.select.SubSelect;
 import net.sf.jsqlparser.statement.select.UnPivot;
+import net.sf.jsqlparser.statement.select.ValuesList;
 import net.sf.jsqlparser.statement.select.WithItem;
 
 public class ExpressionVisitorAdapter implements ExpressionVisitor, ItemsListVisitor, PivotVisitor, SelectItemVisitor {
@@ -234,6 +235,11 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor, ItemsListVis
         if (subSelect.getPivot() != null) {
             subSelect.getPivot().accept(this);
         }
+    }
+
+    @Override
+    public void visit(ValuesList valuesList) {
+        valuesList.getMultiExpressionList().accept(this);
     }
 
     @Override

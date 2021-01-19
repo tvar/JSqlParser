@@ -2303,6 +2303,12 @@ public class SelectTest {
     }
 
     @Test
+    public void testValues7() throws JSQLParserException {
+        String stmt = "SELECT I FROM (VALUES (1), (2), (3)) AS MY_TEMP_TABLE(I) WHERE I IN (VALUES (1), (2))";
+        assertSqlCanBeParsedAndDeparsed(stmt);
+    }
+
+    @Test
     public void testIntervalWithColumn() throws JSQLParserException {
         String stmt = "SELECT DATE_ADD(start_date, INTERVAL duration MINUTE) AS end_datetime FROM appointment";
         assertSqlCanBeParsedAndDeparsed(stmt);

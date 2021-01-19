@@ -17,9 +17,11 @@ import java.util.List;
 import java.util.Optional;
 import net.sf.jsqlparser.expression.Alias;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
+import net.sf.jsqlparser.expression.operators.relational.ItemsList;
+import net.sf.jsqlparser.expression.operators.relational.ItemsListVisitor;
 import net.sf.jsqlparser.expression.operators.relational.MultiExpressionList;
 
-public class ValuesList implements FromItem {
+public class ValuesList implements FromItem, ItemsList {
 
     private Alias alias;
     private MultiExpressionList multiExpressionList;
@@ -118,6 +120,11 @@ public class ValuesList implements FromItem {
 
     public void setColumnNames(List<String> columnNames) {
         this.columnNames = columnNames;
+    }
+
+    @Override
+    public void accept(ItemsListVisitor itemsListVisitor) {
+        itemsListVisitor.visit(this);
     }
 
     @Override

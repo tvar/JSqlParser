@@ -11,6 +11,7 @@ package net.sf.jsqlparser.util.validation.validator;
 
 import net.sf.jsqlparser.expression.operators.relational.*;
 import net.sf.jsqlparser.statement.select.SubSelect;
+import net.sf.jsqlparser.statement.select.ValuesList;
 
 /**
  * @author gitmotte
@@ -42,4 +43,8 @@ public class ItemsListValidator extends AbstractValidator<ItemsList> implements 
         statement.accept(this);
     }
 
+    @Override
+    public void visit(ValuesList valuesList) {
+        valuesList.getMultiExpressionList().accept(this);
+    }
 }

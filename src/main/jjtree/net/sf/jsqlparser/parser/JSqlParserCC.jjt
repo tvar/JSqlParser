@@ -2110,15 +2110,12 @@ FromItem FromItem():
     }
 }
 
-FromItem ValuesList():
+ValuesList ValuesListWithoutAlias():
 {
     MultiExpressionList exprList = new MultiExpressionList();
     List<Expression> primaryExpList = new ArrayList<Expression>();
     ValuesList valuesList = new ValuesList();
     Expression exp = null;
-    List<String> colNames = null;
-    String colName;
-    Alias alias;
 }
 {
     "("
@@ -2136,6 +2133,24 @@ FromItem ValuesList():
     ))
     ")"
 
+    {
+        valuesList.setMultiExpressionList(exprList);
+        return valuesList;
+    }
+}
+
+
+
+FromItem ValuesList():
+{
+    ValuesList valuesList = new ValuesList();
+    List<String> colNames = null;
+    String colName;
+    Alias alias;
+}
+{
+    valuesList = ValuesListWithoutAlias()
+
     [ alias=Alias() { valuesList.setAlias(alias); }
 
         [ "("
@@ -2146,7 +2161,6 @@ FromItem ValuesList():
     ]
 
     {
-        valuesList.setMultiExpressionList(exprList);
         return valuesList;
     }
 }
@@ -2850,6 +2864,7 @@ Expression InExpression() #InExpression :
       LOOKAHEAD(3) multiExpressionList = MultiInExpressions()
       | LOOKAHEAD(3) rightExpression = Function()
       | LOOKAHEAD(2) token=<S_CHAR_LITERAL> { rightExpression = new StringValue(token.image); }
+      | LOOKAHEAD(ValuesList()) rightItemsList=ValuesListWithoutAlias()
       | LOOKAHEAD(3) "(" (LOOKAHEAD(3) rightItemsList=SubSelect() | rightItemsList=SimpleExpressionList() )")"
       | rightExpression = SimpleExpression()
     )

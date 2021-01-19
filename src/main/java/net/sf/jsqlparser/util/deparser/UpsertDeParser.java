@@ -20,6 +20,7 @@ import net.sf.jsqlparser.expression.operators.relational.NamedExpressionList;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.select.SelectVisitor;
 import net.sf.jsqlparser.statement.select.SubSelect;
+import net.sf.jsqlparser.statement.select.ValuesList;
 import net.sf.jsqlparser.statement.select.WithItem;
 import net.sf.jsqlparser.statement.upsert.Upsert;
 
@@ -114,7 +115,15 @@ public class UpsertDeParser extends AbstractDeParser<Upsert> implements ItemsLis
         buffer.append(")");
     }
 
-// not used by top-level upsert
+    @Override
+    public void visit(ValuesList valuesList) {
+        /* Not supported yet
+        buffer.append("(");
+        valuesList.getMultiExpressionList().accept(this);
+        buffer.append(")");*/
+    }
+
+    // not used by top-level upsert
     @Override
     public void visit(NamedExpressionList namedExpressionList) {
     }

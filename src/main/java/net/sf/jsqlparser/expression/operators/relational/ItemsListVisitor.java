@@ -10,6 +10,7 @@
 package net.sf.jsqlparser.expression.operators.relational;
 
 import net.sf.jsqlparser.statement.select.SubSelect;
+import net.sf.jsqlparser.statement.select.ValuesList;
 
 public interface ItemsListVisitor {
 
@@ -20,4 +21,6 @@ public interface ItemsListVisitor {
     void visit(NamedExpressionList namedExpressionList);
 
     void visit(MultiExpressionList multiExprList);
+
+    void visit(ValuesList valuesList);
 }
