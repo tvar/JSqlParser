@@ -12,7 +12,7 @@ package net.sf.jsqlparser.util.validation.validator;
 import net.sf.jsqlparser.expression.AllComparisonExpression;
 import net.sf.jsqlparser.expression.AnalyticExpression;
 import net.sf.jsqlparser.expression.AnyComparisonExpression;
-import net.sf.jsqlparser.expression.ArrayBuilderExpression;
+import net.sf.jsqlparser.expression.ArrayConstructor;
 import net.sf.jsqlparser.expression.ArrayExpression;
 import net.sf.jsqlparser.expression.BinaryExpression;
 import net.sf.jsqlparser.expression.CaseExpression;
@@ -534,7 +534,7 @@ public class ExpressionValidator extends AbstractValidator<Expression> implement
     }
 
     @Override
-    public void visit(ArrayBuilderExpression aThis) {
+    public void visit(ArrayConstructor aThis) {
         for (Expression expression : aThis.getExpressions()) {
             expression.accept(this);
         }

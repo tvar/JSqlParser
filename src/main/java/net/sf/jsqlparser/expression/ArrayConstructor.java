@@ -14,7 +14,7 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 
 import java.util.List;
 
-public class ArrayBuilderExpression extends ASTNodeAccessImpl implements Expression {
+public class ArrayConstructor extends ASTNodeAccessImpl implements Expression {
     private List<Expression> expressions;
     private boolean arrayKeyword;
 
@@ -34,7 +34,7 @@ public class ArrayBuilderExpression extends ASTNodeAccessImpl implements Express
         this.arrayKeyword = arrayKeyword;
     }
 
-    public ArrayBuilderExpression(List<Expression> expressions, boolean arrayKeyword) {
+    public ArrayConstructor(List<Expression> expressions, boolean arrayKeyword) {
         this.expressions = expressions;
         this.arrayKeyword = arrayKeyword;
     }

@@ -543,7 +543,7 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor, ItemsListVis
     }
 
     @Override
-    public void visit(ArrayBuilderExpression aThis) {
+    public void visit(ArrayConstructor aThis) {
         for (Expression expression : aThis.getExpressions()) {
             expression.accept(this);
         }

@@ -3376,7 +3376,7 @@ Expression PrimaryExpression() #PrimaryExpression:
 
         | LOOKAHEAD(2) retval=DateTimeLiteralExpression()
 
-        | LOOKAHEAD(2) <K_ARRAYLITERAL> retval=ArrayBuilderExpression(true)
+        | LOOKAHEAD(2) <K_ARRAYLITERAL> retval=ArrayConstructor(true)
 
         | LOOKAHEAD(2) retval = NextValExpression()
 
@@ -3488,15 +3488,15 @@ DateTimeLiteralExpression DateTimeLiteralExpression() : {
     t=<S_CHAR_LITERAL> { expr.setValue(t.image); return expr; }
 }
 
-ArrayBuilderExpression ArrayBuilderExpression(final boolean arrayKeyword) : {
+ArrayConstructor ArrayConstructor(final boolean arrayKeyword) : {
     ArrayList<Expression> expList = new ArrayList();
-    ArrayBuilderExpression array = new ArrayBuilderExpression(expList, arrayKeyword);
+    ArrayConstructor array = new ArrayConstructor(expList, arrayKeyword);
     Expression exp = null;
 } {
     "["
-        (LOOKAHEAD(3) exp = SimpleExpression() | exp = ArrayBuilderExpression(false))
+        (LOOKAHEAD(3) exp = SimpleExpression() | exp = ArrayConstructor(false))
         { expList.add(exp); }
-        ("," (exp = SimpleExpression() | exp = ArrayBuilderExpression(false))
+        ("," (exp = SimpleExpression() | exp = ArrayConstructor(false))
             { expList.add(exp); })*
     "]"
     { return array; }

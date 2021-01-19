@@ -158,7 +158,7 @@ public interface ExpressionVisitor {
 
     public void visit(ArrayExpression aThis);
 
-    public void visit(ArrayBuilderExpression aThis);
+    public void visit(ArrayConstructor aThis);
 
     public void visit(VariableAssignment aThis);
 
