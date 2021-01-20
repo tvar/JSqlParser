@@ -4457,4 +4457,10 @@ public class SelectTest {
     public void testSelectTuple() throws JSQLParserException {
         assertSqlCanBeParsedAndDeparsed("SELECT hyperloglog_distinct((1, 2)) FROM t");
     }
+
+    @Test
+    public void testSelectBoolean() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("SELECT CAST(a > b AS int), b >= a, CASE WHEN a > b THEN TRUE ELSE FALSE END FROM t");
+    }
+
 }

@@ -3705,7 +3705,7 @@ CastExpression CastExpression():
     boolean    useCastKeyword;
 }
 {
-    <K_CAST> "(" expression=SimpleExpression() <K_AS> type=ColDataType() ")" { retval.setUseCastKeyword(true); }
+    <K_CAST> "(" expression=Condition() <K_AS> type=ColDataType() ")" { retval.setUseCastKeyword(true); }
 
     {
         retval.setLeftExpression(expression);
