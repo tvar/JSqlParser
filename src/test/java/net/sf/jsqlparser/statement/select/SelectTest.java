@@ -4463,4 +4463,9 @@ public class SelectTest {
         assertSqlCanBeParsedAndDeparsed("SELECT CAST(a > b AS int), b >= a, CASE WHEN a > b THEN TRUE ELSE FALSE END FROM t");
     }
 
+    @Test
+    public void testSelectRowElement() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("SELECT (t.tup).id, (tup).name FROM t");
+    }
+
 }
