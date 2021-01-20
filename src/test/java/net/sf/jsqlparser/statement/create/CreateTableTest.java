@@ -686,5 +686,10 @@ public class CreateTableTest {
     @Test
     public void testCreateTableWithParameterDefaultFalseIssue1089() throws JSQLParserException {
         assertSqlCanBeParsedAndDeparsed("create table ADDRESS_TYPE ( address_type CHAR(1) not null, at_name VARCHAR(250) not null, is_disabled BOOL not null default FALSE, constraint PK_ADDRESS_TYPE primary key (address_type) )", true);
-    }   
+    }
+
+    @Test
+    public void testCreateLikePG() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("CREATE TEMP TABLE t11 (gid int, like query_stat, like etl_tasks)");
+    }
 }
