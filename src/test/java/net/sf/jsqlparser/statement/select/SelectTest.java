@@ -4468,4 +4468,9 @@ public class SelectTest {
         assertSqlCanBeParsedAndDeparsed("SELECT (t.tup).id, (tup).name FROM t");
     }
 
+    @Test
+    public void testTest() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("SELECT array_agg(DISTINCT s ORDER BY b)[1] FROM t");
+    }
+
 }
