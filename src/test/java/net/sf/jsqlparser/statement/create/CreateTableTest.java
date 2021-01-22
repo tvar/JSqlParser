@@ -702,4 +702,9 @@ public class CreateTableTest {
         assertSqlCanBeParsedAndDeparsed("CREATE TEMP TABLE t AS (SELECT * FROM t2) DISTRIBUTED RANDOMLY");
     }
 
+    @Test
+    public void testDefaultArray() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("CREATE TABLE t (f1 text[] DEFAULT ARRAY[] :: text[] NOT NULL, f2 int[] DEFAULT ARRAY[1, 2])");
+    }
+
 }
