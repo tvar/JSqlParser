@@ -3362,7 +3362,7 @@ Expression PrimaryExpression() #PrimaryExpression:
     boolean not = false;
     boolean exclamationMarkNot = false;
     boolean dateExpressionAllowed = true;
-    ExpressionList list;
+    ExpressionList list; 
 }
 {
     [ <K_NOT> { not=true; } | "!" { not=true; exclamationMarkNot=true; } ]
