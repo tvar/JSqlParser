@@ -1395,8 +1395,8 @@ String RelObjectNameWithoutValue() :
       | tk=<K_READ> | tk=<K_SCHEMA> | tk=<K_SIGNED> | tk=<K_SIZE> | tk=<K_SEQUENCE> | tk=<K_SESSION>
       | tk=<K_VIEW> | tk=<K_NOLOCK> | tk=<K_VALIDATE> | tk=<K_CYCLE> | tk=<K_OF> | tk=<K_EXCLUDE>
     /*| tk=<K_PLACING> | tk=<K_BOTH> | tk=<K_LEADING> | tk=<K_TRAILING> */
-      | tk=<K_FORMAT> | tk=<K_DIV> | tk=<K_UNSIGNED> | tk=<K_CASE> | tk=<K_CACHE> | tk=<K_ARRAY_LITERAL> | tk=<K_LOCAL>
-      | tk=<K_RANDOMLY> | tk=<K_REPLICATED>
+      | tk=<K_FORMAT> | tk=<K_DIV> | tk=<K_UNSIGNED> | tk=<K_CASE> | tk=<K_CACHE> | tk=<K_LOCAL>
+      | tk=<K_ARRAY_LITERAL> | tk=<K_RANDOMLY> | tk=<K_REPLICATED>
       )
 
     { return tk.image; }
@@ -2276,8 +2276,8 @@ KSQLJoinWindow JoinWindow():
     Token afterTimeUnitToken = null;
 }
 {
-    (beforeDurationToken=<S_LONG> beforeTimeUnitToken=<S_IDENTIFIER>
-        [ "," afterDurationToken=<S_LONG> afterTimeUnitToken=<S_IDENTIFIER> ]
+    (beforeDurationToken=<S_LONG> (beforeTimeUnitToken=<S_IDENTIFIER> | beforeTimeUnitToken=<K_DATE_LITERAL>)
+        [ "," afterDurationToken=<S_LONG> (afterTimeUnitToken=<S_IDENTIFIER> | afterTimeUnitToken=<K_DATE_LITERAL>) ]
     {
         if (afterDurationToken == null) {
             retval.setDuration(Long.parseLong(beforeDurationToken.image));
@@ -3362,7 +3362,7 @@ Expression PrimaryExpression() #PrimaryExpression:
     boolean not = false;
     boolean exclamationMarkNot = false;
     boolean dateExpressionAllowed = true;
-    ExpressionList list; 
+    ExpressionList list;
 }
 {
     [ <K_NOT> { not=true; } | "!" { not=true; exclamationMarkNot=true; } ]
