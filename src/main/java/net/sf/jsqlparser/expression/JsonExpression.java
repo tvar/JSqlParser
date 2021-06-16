@@ -34,9 +34,13 @@ public class JsonExpression extends ASTNodeAccessImpl implements Expression {
         this.expr = expr;
     }
 
-//    public List<String> getIdents() {
-//        return idents;
-//    }
+    public List<String> getIdents() {
+        return idents;
+    }
+
+    public List<String> getOperators() {
+        return operators;
+    }
 //
 //    public void setIdents(List<String> idents) {
 //        this.idents = idents;
