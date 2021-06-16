@@ -117,6 +117,9 @@ public class CreateTableDeParser extends AbstractDeParser<CreateTable> {
                 buffer.append(")");
             }
         }
+        if (createTable.getDistributed() != null) {
+            buffer.append(" ").append(createTable.getDistributed().toString());
+        }
     }
 
 }

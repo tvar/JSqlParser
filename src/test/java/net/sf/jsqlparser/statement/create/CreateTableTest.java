@@ -829,6 +829,11 @@ public class CreateTableTest {
   }
 
   @Test
+  public void testTestDistributed2() throws JSQLParserException {
+    assertSqlCanBeParsedAndDeparsed("CREATE TEMP TABLE t AS (SELECT * FROM t2) DISTRIBUTED RANDOMLY");
+  }
+
+  @Test
   public void testCreateTempTableAsSelect() throws JSQLParserException {
     assertSqlCanBeParsedAndDeparsed(
             "CREATE TEMP TABLE T1 (C1, C2) AS SELECT C3, C4 FROM T2");

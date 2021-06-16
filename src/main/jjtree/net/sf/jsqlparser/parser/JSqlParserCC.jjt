@@ -181,6 +181,7 @@ TOKEN: /* SQL Keywords. prefixed with K_ to avoid name clashes */
 |   <K_DESCRIBE:"DESCRIBE">
 |   <K_DISABLE : "DISABLE">
 |   <K_DISTINCT:"DISTINCT">
+|   <K_DISTRIBUTED:"DISTRIBUTED">
 |   <K_DIV:"DIV">
 |   <K_DDL:"DDL">
 |   <K_DML:"DML">
@@ -308,6 +309,7 @@ TOKEN: /* SQL Keywords. prefixed with K_ to avoid name clashes */
 |   <K_PROCEDURE:"PROCEDURE">
 |   <K_PUBLIC:"PUBLIC">
 |   <K_QUERY:"QUERY">
+|   <K_RANDOMLY: "RANDOMLY">
 |   <K_RANGE: "RANGE">
 |   <K_READ: "READ" >
 |   <K_RECURSIVE:"RECURSIVE">
@@ -316,6 +318,7 @@ TOKEN: /* SQL Keywords. prefixed with K_ to avoid name clashes */
 |   <K_RLIKE: "RLIKE">
 |   <K_RENAME:"RENAME">
 |   <K_REPLACE:"REPLACE">
+|   <K_REPLICATED: "REPLICATED">
 |   <K_RESUMABLE: "RESUMABLE">
 |   <K_RESTRICT: "RESTRICT">
 |   <K_RETURNING: "RETURNING">
@@ -1432,6 +1435,7 @@ String RelObjectNameWithoutValue() :
 
       /* Keywords for ALTER SESSION */
       /* | tk=<K_NAME> */ | tk=<K_TIMEOUT> | tk=<K_PARALLEL>
+      | tk=<K_RANDOMLY> | tk=<K_REPLICATED>
       )
 
     { return tk.image; }
@@ -4298,6 +4302,25 @@ List<String> PathSpecification():
     }
 }
 
+Distributed Distributed(): {
+    Token tk = null;
+    List<String> colNames = null;
+    String colName = null;
+    Distributed res = null;
+}
+{
+    (
+    (<K_BY> {colNames = new ArrayList<String>(); }
+        "(" colName = RelObjectNameExt() {colNames.add(colName); }
+        ("," colName = RelObjectNameExt() {colNames.add(colName); })*
+        ")"
+        { res = new Distributed(colNames); }
+    )
+    | ( tk=<K_RANDOMLY>|tk=<K_REPLICATED>) {res = new Distributed(DistributionMode.valueOf(tk.image.toUpperCase())); }
+    )
+    { return res; }
+}
+
 CreateTable CreateTable():
 {
     CreateTable createTable = new CreateTable();
@@ -4330,6 +4353,7 @@ CreateTable CreateTable():
     ReferentialAction.Action action = null;
     String tableColumn = null;
     List<String> columns = new ArrayList<String>();
+    Distributed dist = null;
 }
 {
     <K_CREATE>
@@ -4492,6 +4516,7 @@ CreateTable CreateTable():
     <K_LIKE> ( LOOKAHEAD("(" Table() ")") "(" likeTable=Table() { createTable.setLikeTable(likeTable, true); } ")"
                  | likeTable=Table() { createTable.setLikeTable(likeTable, false); } )
     ]
+    [<K_DISTRIBUTED> dist=Distributed() {createTable.setDistributed(dist); }]
     {
         createTable.setTable(table);
         if (indexes.size() > 0)
