@@ -4511,6 +4511,11 @@ public class SelectTest {
     }
 
     @Test
+    public void testSelectBoolean() throws JSQLParserException {
+        assertSqlCanBeParsedAndDeparsed("SELECT CAST(a > b AS int), b >= a, CASE WHEN a > b THEN TRUE ELSE FALSE END FROM t");
+    }
+
+    @Test
     public void testColonDelimiterIssue1134() throws JSQLParserException {
         Statement stmt = CCJSqlParserUtil.parse("SELECT * FROM stores_demo:informix.accounts");
         assertEquals("SELECT * FROM stores_demo.informix.accounts", stmt.toString());
