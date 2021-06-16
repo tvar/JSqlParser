@@ -832,6 +832,16 @@ public class CreateTableTest {
   public void testTestDistributed2() throws JSQLParserException {
     assertSqlCanBeParsedAndDeparsed("CREATE TEMP TABLE t AS (SELECT * FROM t2) DISTRIBUTED RANDOMLY");
   }
+  
+  @Test
+  public void testCreateLikePG() throws JSQLParserException {
+    assertSqlCanBeParsedAndDeparsed("CREATE TEMP TABLE t11 (gid int, like query_stat, like etl_tasks)");
+  }
+
+  @Test
+  public void testTestDistributed() throws JSQLParserException {
+    assertSqlCanBeParsedAndDeparsed("CREATE TEMP TABLE t (LIKE t2) DISTRIBUTED BY (id)");
+  }
 
   @Test
   public void testCreateTempTableAsSelect() throws JSQLParserException {

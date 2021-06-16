@@ -4233,8 +4233,9 @@ ColumnDefinition ColumnDefinition(): {
     ColDataType colDataType;
     List<String> columnSpecs = new ArrayList<String>();
     List<String> parameter;
+    Token tk;
 } {
-    columnName=RelObjectName()
+    (columnName=RelObjectName() | (tk = <K_LIKE> {columnName = tk.image; }))
 
     colDataType = ColDataType()
 
